@@ -20,7 +20,7 @@ const Home = (props) => {
 }
 
 const PizzaForm = (props) => {
-  const [form, setFrom] = useState({id: ''});
+  const [form, setForm] = useState({id: ''});
   const [errors, setErrors] = useState([]);
 
   // const change = event => {
@@ -28,17 +28,38 @@ const PizzaForm = (props) => {
   //   const valueToUse = type === 'checkbox' ? check
   // }
 
+  const changeValue = (field, val) => {
+    const newForm = { ...form};
+    newForm[field] = val;
+    setForm(newForm);
+  };
+
+  const runValidations = () => {
+    schema
+      .validate(form, { abortEarly: false })
+      .then((responseData) => {
+        console.log("no validation errors");
+        console.log(responseData);
+        setErrors([]);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(err.name); // ValidationError
+        console.log(err.errors);
+        setErrors(err.errors);
+      });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
     // const name = event.target.elements.name-input.value;
     // const size = event.target.elements.size-dropdown.value;
 
   }
 
-  useEffect(() => {
-    schema.isValid(form).then(valid => setDisabled(!valid))
-  },[form])
+  // useEffect(() => {
+  //   schema.isValid(form).then(valid => setDisabled(!valid))
+  // },[form])
 
   return (
     <div style={{ ...style, borderColor: 'red' }}>
@@ -50,7 +71,7 @@ const PizzaForm = (props) => {
           value={form.id}
           id='name-input'
           minLength='2'
-          onChange={(e) => changeValue("id", e.target.value)}
+          onChange={(e) => changeValue("text", e.target.value)}
         />
         <br/>
         <label>Pizza Size</label>
