@@ -5,7 +5,8 @@ import * as yup from 'yup';
 
 
 const schema = yup.object().shape({
-  id: yup.string().required('name must be at least 2 characters').min(2, 'name must be at least 2 characters' )
+  id: yup.string().required('Name is required').min(2, 'name must be at least 2 characters' ),
+  value: yup.string().min(2)
 });
 
 const  style = {margin: ' rem', padding: '0.5rem', border: '2 px solid black' }
@@ -20,7 +21,12 @@ const Home = (props) => {
 
 const PizzaForm = (props) => {
   const [form, setFrom] = useState({id: ''});
-  const [disabled, setDisabled] = useState(true);
+  const [errors, setErrors] = useState([]);
+
+  // const change = event => {
+  //   const { value, type  } = event.target
+  //   const valueToUse = type === 'checkbox' ? check
+  // }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -32,7 +38,7 @@ const PizzaForm = (props) => {
 
   useEffect(() => {
     schema.isValid(form).then(valid => setDisabled(!valid))
-  },[])
+  },[form])
 
   return (
     <div style={{ ...style, borderColor: 'red' }}>
@@ -44,6 +50,7 @@ const PizzaForm = (props) => {
           value={form.id}
           id='name-input'
           minLength='2'
+          onChange={(e) => changeValue("id", e.target.value)}
         />
         <br/>
         <label>Pizza Size</label>
