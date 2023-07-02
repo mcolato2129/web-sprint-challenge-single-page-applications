@@ -19,7 +19,8 @@ const Home = (props) => {
 }
 
 const PizzaForm = (props) => {
-  const [form, setFrom] = useState({id: ''})
+  const [form, setFrom] = useState({id: ''});
+  const [disabled, setDisabled] = useState(true);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -30,7 +31,7 @@ const PizzaForm = (props) => {
   }
 
   useEffect(() => {
-    schema.isValid()
+    schema.isValid(form).then(valid => setDisabled(!valid))
   },[])
 
   return (
