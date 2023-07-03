@@ -53,7 +53,7 @@ const PizzaForm = (props) => {
           type="text"
           name='name'
           placeholder="Name"
-          value={form.id}
+          value={form.name}
           id='name-input'
           minLength='2'
           onChange={(event) => handleSubmit(event, 'name')}
