@@ -20,8 +20,8 @@ const Home = (props) => {
 }
 
 const PizzaForm = (props) => {
-  const [form, setForm] = useState({ id: ''});
-  const [errors, setErrors] = useState({ id: '' });
+  const [form, setForm] = useState({ name: ''});
+  const [errors, setErrors] = useState({ name: '' });
 
   // const change = event => {
   //   const { value, type  } = event.target
