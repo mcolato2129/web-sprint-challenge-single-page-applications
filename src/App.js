@@ -1,15 +1,15 @@
 import React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Link } from 'react-router-dom';
 import * as yup from 'yup';
 
 
 const schema = yup.object().shape({
-  id: yup.string().required('Name is required').min(2, 'name must be at least 2 characters' ),
+  name: yup.string().required('Name is required').min(2, 'name must be at least 2 characters'),
   value: yup.string().min(2)
 });
 
-const  style = {margin: ' rem', padding: '0.5rem', border: '2 px solid black' }
+const style = { margin: ' rem', padding: '0.5rem', border: '2 px solid black' }
 
 const Home = (props) => {
   return (
@@ -20,80 +20,66 @@ const Home = (props) => {
 }
 
 const PizzaForm = (props) => {
-  const [form, setForm] = useState({id: ''});
-  const [errors, setErrors] = useState([]);
+  const [form, setForm] = useState({ id: ''});
+  const [errors, setErrors] = useState({ id: '' });
 
   // const change = event => {
   //   const { value, type  } = event.target
   //   const valueToUse = type === 'checkbox' ? check
   // }
 
-  const changeValue = (field, val) => {
-    const newForm = { ...form};
-    newForm[field] = val;
-    setForm(newForm);
-  };
-
-  const runValidations = () => {
-    schema
-      .validate(form, { abortEarly: false })
-      .then((responseData) => {
-        console.log("no validation errors");
-        console.log(responseData);
-        setErrors([]);
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log(err.name); // ValidationError
-        console.log(err.errors);
-        setErrors(err.errors);
-      });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // const name = event.target.elements.name-input.value;
-    // const size = event.target.elements.size-dropdown.value;
-
+  const setFormErrors = (name, value) => {
+    yup.reach(schema, name)
+    .validate(value)
+    .then(() => setErrors({...errors, [name]: ''}))
+    .catch(err => setErrors({...errors, [name]: err.errors[0] }))
   }
 
-  // useEffect(() => {
-  //   schema.isValid(form).then(valid => setDisabled(!valid))
-  // },[form])
+  const handleSubmit = event => {
+    const { value, name } = event.target
+    setForm({...form, [name]: value});
+    setFormErrors(name, value)
+  };
+  useEffect(() => {
+   console.log(errors)
+   console.log(form)
+  },[form])
 
   return (
     <div style={{ ...style, borderColor: 'red' }}>
       <h1>Pizza Form Thing...I guess. Yeah. Ok. Good.</h1>
       <form id='pizza-form' onSubmit={handleSubmit}>
-        <input 
-          type= 'text'
-          placeholder='Name'
+        <input
+          type="text"
+          name='name'
+          placeholder="Name"
           value={form.id}
           id='name-input'
           minLength='2'
-          onChange={(e) => changeValue("text", e.target.value)}
+          onChange={(event) => handleSubmit(event, 'name')}
         />
-        <br/>
+        {errors.name && <span style={{color: 'red'}}>{errors.name}</span>}
+        <br />
         <label>Pizza Size</label>
         <select id='size-dropdown'>
           <option value='1'>small</option>
           <option value='2'>medium</option>
           <option value='3'>large</option>
         </select>
-        <br/>
-        <input type='checkbox'/>
+        <br />
+        <input type='checkbox' />
         <label>pepporni</label>
-        <br/>
-        <input type='checkbox'/>
+        <br />
+        <input type='checkbox' />
         <label>peppers</label>
-        <br/>
-        <input type='checkbox'/>
+        <br />
+        <input type='checkbox' />
         <label>chicken</label>
-        <br/>
-        <input type='checkbox'/>
+        <br />
+        <input type='checkbox' />
         <label>jalepanoes</label>
-        <br/>
-        <input 
+        <br />
+        <input
           placeholder='Special Instructions'
           id='special-text'
           minLength='2'
